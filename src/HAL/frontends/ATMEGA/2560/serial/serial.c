@@ -1,4 +1,5 @@
 #include <util/setbaud.h>
+#include <stdbool.h>
 
 #define F_CPU 16000000UL
 #define BAUD 9600
@@ -27,4 +28,11 @@ void ATMEGA2560_UART_PUTCHAR(char c, FILE* stream) {
 char ATMEGA2560_UART_GETCHAR(FILE* stream) {
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
+}
+bool ATMEGA2560_UART_RXBUFFER_READY(void) {
+    if(bit_is_set(UCSR0B,RXC0)) {
+        return true;
+    } else {
+        return false;
+    }
 }
