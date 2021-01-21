@@ -1,0 +1,7 @@
+#ifndef HAL_ARDUINOMEGA_SERIAL_H
+#define HAL_ARDUINOMEGA_SERIAL_H
+
+void ATMEGA2560_DELAY_MS(float ms);
+void ATMEGA2560_DELAY_US(float us);
+
+#endif
