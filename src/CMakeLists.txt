@@ -18,5 +18,4 @@ add_executable(Serial HAL/serial/serial.c)
 
 # CMake configuration
 configure_file(version.h.in version.h)
-target_include_directories(EOS PUBLIC "${PROJECT_BINARY_DIR}")
 #
