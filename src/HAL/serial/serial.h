@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "../../../build/version.h"
+#include "../../core/system.h"
 
 //#ifdef FRONTEND
 

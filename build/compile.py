@@ -13,10 +13,10 @@ def get_compile_list(target):
     for file in os.listdir("targets/"):
         if file.endswith(".txt"):
             filename = file.split(".")[0]
-            if filename == target:
+            if filename.lower() == target.lower(): #case insensitive
                 with open('targets/'+filename+'.txt') as f_list:
                     for line in f_list:
-                        list_compile_c_files.append(line)
+                        list_compile_c_files.append(line.rstrip('\n'))
                     return list_compile_c_files
 
 def convert_c_filename_to_o(c_file_name):
@@ -33,8 +33,17 @@ def main():
         print("No files to be compiled! Check your target platform compilation list!")
         exit(-1)
 
+    #Change directory to src/
+    os.chdir('../src/')
+
+    file_names=''
     for file_name in compile_list:
-        os.system(COMPILER_NAME+' '+COMPILER_FLAGS+' '+file_name+' -o '+convert_c_filename_to_o(file_name))
+        file_names+=file_name+' '
+
+    os.mkdir('../build/output')
+    cmd = (COMPILER_NAME+' '+COMPILER_FLAGS+' '+file_names+' -o '+'../build/output/eos.o')
+    print('Compiling with command: '+cmd)
+    os.system(cmd)
 
 if __name__ == "__main__":
     main()

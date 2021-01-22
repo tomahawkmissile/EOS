@@ -1,4 +1,4 @@
-#include "hal_serial.h"
+#include "serial.h"
 
 void HAL_serial_putstring(const char* str) {
     unsigned int len=strlen(str);
