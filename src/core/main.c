@@ -2,7 +2,7 @@
 
 #include "../HAL/serial/serial.h"
 
-void loop(){
+void loop() {
     HAL_serial_putstring("Hello, World!");
 }
 void setup() {
