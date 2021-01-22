@@ -1,7 +1,10 @@
 #ifndef HAL_ARDUINOMEGA_SERIAL_H
 #define HAL_ARDUINOMEGA_SERIAL_H
 
-void ATMEGA2560_DELAY_MS(float ms);
-void ATMEGA2560_DELAY_US(float us);
+#include <avr/io.h>
+#define __DELAY_BACKWARD_COMPATIBLE__
+#include <util/delay.h>
+
+void ATMEGA2560_DELAY_MS(int ms);
 
 #endif

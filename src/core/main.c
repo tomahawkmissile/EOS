@@ -1,10 +1,12 @@
-#include "../HAL/serial/serial.h"
+#include "../../build/version.h" //This needs to be first!
+
+#include "../HAL/serial/hal_serial.h"
 
 void loop(){
-    serial_putstring("Hello, World!");
+    HAL_serial_putstring("Hello, World!");
 }
 void setup() {
-    serial_init();
+    HAL_serial_init();
 }
 
 void main(void) {

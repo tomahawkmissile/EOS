@@ -1,8 +1,4 @@
-#include <util/setbaud.h>
-#include <stdbool.h>
-
-#define F_CPU 16000000UL
-#define BAUD 9600
+#include "serial.h"
 
 void ATMEGA2560_UART_INIT(void) {
     UBRR0H = UBRRH_VALUE;
@@ -18,14 +14,14 @@ void ATMEGA2560_UART_INIT(void) {
     UCSR0B = _BV(RXEN0) | _BV(TXEN0); //Enable RX and TX
 }
 
-void ATMEGA2560_UART_PUTCHAR(char c, FILE* stream) {
+void ATMEGA2560_UART_PUTCHAR(char c) {
     if(c == '\n') {
-        ATMEGA2560_UART_PUTCHAR('\r', stream);
+        ATMEGA2560_UART_PUTCHAR('\r');
     }
     loop_until_bit_is_set(UCSR0A, UDRE0);
     UDR0 = c;
 }
-char ATMEGA2560_UART_GETCHAR(FILE* stream) {
+char ATMEGA2560_UART_GETCHAR() {
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
 }
