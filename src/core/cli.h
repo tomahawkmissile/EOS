@@ -3,15 +3,13 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "utils/string/strings.h"
 #include "debug/debug.h"
 #include "debug/logger.h"
-
-static const char* CONSOLE_HEADER = "[SYSTEM] > ";
-static const char* COMMAND_RESEND = "[RESEND]";
-static const char* COMMAND_WATCHDOG = "[WATCHDOG]";
-
+#include "../HAL/serial/serial.h"
 
 bool argsEqual(const char* input,const char* test);
 void printConsole(const char* message);

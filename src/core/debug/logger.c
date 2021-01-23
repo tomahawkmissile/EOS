@@ -1,13 +1,9 @@
 #include "logger.h"
 
-#include "debug.h"
-#include "../../HAL/serial/serial.h"
-#include "../utils/string/strings.h"
-
-void logMessage(LOG_SEVERITY severity, String message) {
+void logMessage(LOG_SEVERITY severity, const char* message) {
   const char* head = "";
   switch (severity) {
-    case BOOT: head = concat(concat("[" , String(millis())) , "ms] "); break; //Use boot time notation to print
+    case BOOT: head = concat(concat("[" , long_to_string(millis())) , "ms] "); break; //Use boot time notation to print
     case DEBUG: head = "[DEBUG] "; break;
     case INFO: head = "[INFO] "; break;
     case WARN: head = "[WARN] "; break;

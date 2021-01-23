@@ -1,11 +1,15 @@
 #include "cli.h"
 
+const char* CONSOLE_HEADER = "[SYSTEM] > ";
+const char* COMMAND_RESEND = "[RESEND]";
+const char* COMMAND_WATCHDOG = "[WATCHDOG]";
+
 bool argsEqual(const char* input,const char* test) {
   return strcmp(input,test)==0;
 }
 
 void printConsole(const char* message) {
-  HAL_serial_putstring(concat(CONSOLE_HEADER,message));
+  serial_println(concat(CONSOLE_HEADER,message));
 }
 
 void trimCmdLineArgs(const char** input) {
@@ -26,7 +30,7 @@ void trimCmdLineArgs(const char** input) {
       }
     }
   }
-  const char* output = substring(input,firstValidChar,lastValidChar+1);
+  const char* output = substring(*input,firstValidChar,lastValidChar+1);
   *input = output;
 }
 void smartSpaceSplit(const char* line, char** output, unsigned int* outputLength) {
@@ -41,22 +45,22 @@ void smartSpaceSplit(const char* line, char** output, unsigned int* outputLength
       case ' ':
         if(!inQuotes && i>0) {
           char* newOutput;
-          *outputLength++;
-          if(*outputLength>0) newOutput=(char*)realloc(*output,sizeof(char*)*(*outputLength+1));
-          else newOutput=(char*)malloc(sizeof(char)*(*outputLength+1));
+          (*outputLength)++;
+          if((*outputLength)>0) newOutput=(char*)realloc(*output,sizeof(char*)*((*outputLength)+1));
+          else newOutput=(char*)malloc(sizeof(char)*((*outputLength)+1));
           *output=newOutput;
-          (*output)[*outputLength-1]=substring(line,last,i);
+          output[(*outputLength)-1]=nonconst_substring(line,last,i);
           last=i+1;
           break;
         }
       default: 
         if(i==strlen(line)-2) {
           char* newOutput;
-          *outputLength++;
-          if(*outputLength>0) newOutput=(char*)realloc(*output,sizeof(char)*(*outputLength+1));
-          else newOutput=(char*)malloc(sizeof(char)*(*outputLength+1));
+          (*outputLength)++;
+          if((*outputLength)>0) newOutput=(char*)realloc(*output,sizeof(char)*((*outputLength)+1));
+          else newOutput=(char*)malloc(sizeof(char)*((*outputLength)+1));
           *output=newOutput;
-          (*output)[*outputLength-1]=substring(line,last,i+2);
+          output[(*outputLength)-1]=nonconst_substring(line,last,i+2);
           return;
         }
       break;
@@ -68,7 +72,7 @@ void parseCmdLineArgs(const char** input) {
   trimCmdLineArgs(input);
   
   unsigned int outputLength=0;
-  char** output;
+  char** output = NULL;
   smartSpaceSplit(*input,output,&outputLength);
   for(int i=0;i<outputLength;i++) {
     serial_println(output[i]);
@@ -93,17 +97,17 @@ void cli_init(void) {
     serial_println(CONSOLE_HEADER); //Initial console characters on boot
 }
 
-static char* current_input="";
+char* current_input="";
 void cli_run(void) {
     //Console input
   if(serial_available()) {
     char c = serial_read();
     if(c != '\n' && c != '\r') {
       current_input += c;
-      serial_print(c); //Print back to console to see what you're typing
+      serial_printChar(c); //Print back to console to see what you're typing
     }
     if(c=='\n' || c=='\r') { //If incoming data is newline
-      parseCmdLineArgs(&current_input); //Send input to be parsed
+      parseCmdLineArgs((const char**)&current_input); //Send input to be parsed
       current_input=""; //Reset input
     }
   }

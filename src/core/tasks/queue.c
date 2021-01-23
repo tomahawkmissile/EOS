@@ -32,7 +32,6 @@ void runQueue(void) {
   }
   for(int i=0;i<tListLen;i++) {
     TaskTimer current = tList[i];
-    if(&current == NULL) continue; // null check
 
     unsigned long now = millis(); //Log current time for reference
     

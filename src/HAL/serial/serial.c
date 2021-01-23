@@ -8,10 +8,13 @@ void HAL_serial_putstring(const char* str) {
 }
 
 void serial_println(const char* line) {
-    HAL_serial_putstring(concat(line,'\n'));
+    HAL_serial_putstring(concat(line,"\n"));
 }
 void serial_print(const char* line) {
     HAL_serial_putstring(line);
+}
+void serial_printChar(char c) {
+    HAL_serial_putchar(c);
 }
 void serial_linebreak(void) {
     HAL_serial_putchar('\n');
