@@ -18,14 +18,16 @@ def get_compile_list(target):
             #filename = file.split(".")[0]
             filename = file
             if filename.lower() == target.lower(): #case insensitive
-                with open('targets/'+filename+'/files.txt') as f_list:
+                text = 'targets/'+filename+'/files.txt'
+                if not os.path.isfile(text):
+                    # If target does not exist
+                    print('Target does not exist! Check to make sure your target is supported.')
+                    exit(-1)
+                with open(text) as f_list:
                     for line in f_list:
                         if not line.startswith('#') and not line.isspace():
                             list_compile_c_files.append(line.rstrip('\n'))
                     return list_compile_c_files
-    # If target does not exist
-    print('Target does not exist! Check to make sure your target is supported.')
-    exit(-1)
 
 def convert_c_filename_to_o(c_file_name):
     file_name_raw = c_file_name.split(".")[0]
