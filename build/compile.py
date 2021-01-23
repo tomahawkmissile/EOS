@@ -3,6 +3,7 @@ import sys
 import argparse
 from pathlib import Path
 import shutil
+import subprocess
 
 COMPILER_NAME = 'avr-gcc'
 COMPILER_FLAGS = '-mmcu=atmega2560 -Os -DF_CPU=16000000UL -Wall -Wno-main -Wundef -pedantic -Werror -Wfatal-errors -Wl,--relax,--gc-sections -g -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -fno-split-wide-types -fno-tree-scev-cprop'
@@ -14,6 +15,8 @@ def get_compile_list(target):
 
     for file in os.listdir("targets/"):
         if os.path.isdir("targets/"+file):
+            #filename = file.split(".")[0]
+            filename = file
             if filename.lower() == target.lower(): #case insensitive
                 with open('targets/'+filename+'/files.txt') as f_list:
                     for line in f_list:
@@ -70,6 +73,12 @@ def main():
     link = (LINKER_NAME+' '+LINKER_FLAGS+' -o '+binary_location+' '+executable_list_string)    
     print('Linking with command: '+link)
     os.system(link)
+
+    post_script = 'targets/'+args.target+'/postprocessing.sh'
+    if os.path.exists(post_script) # If a postprocessing script is given
+        print('Executing postprocessing script...')
+        os.chdir('output/')
+        subprocess.call(['bash', post_script])
 
     print('Finished')
 
