@@ -1,2 +1,2 @@
-#define FRONTEND 1 //Define frontend here
-//#define F_CPU 16000000
+#define FRONTEND 2 //Define frontend here
+#define F_CPU 8000000

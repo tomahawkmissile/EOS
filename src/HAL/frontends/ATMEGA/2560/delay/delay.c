@@ -1,5 +1,5 @@
 #include "delay.h"
 
-void ATMEGA2560_DELAY_MS(int ms) {
+void atmega2560_delay_ms(int ms) {
     _delay_ms(ms);
 }

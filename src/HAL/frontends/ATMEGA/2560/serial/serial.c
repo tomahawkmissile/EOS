@@ -1,6 +1,6 @@
 #include "serial.h"
 
-void ATMEGA2560_UART_INIT(void) {
+void atmega2560_uart_init(void) {
     UBRR0H = UBRRH_VALUE;
     UBRR0L = UBRRL_VALUE;
 
@@ -14,18 +14,18 @@ void ATMEGA2560_UART_INIT(void) {
     UCSR0B = _BV(RXEN0) | _BV(TXEN0); //Enable RX and TX
 }
 
-void ATMEGA2560_UART_PUTCHAR(char c) {
+void atmega2560_uart_putchar(char c) {
     if(c == '\n') {
-        ATMEGA2560_UART_PUTCHAR('\r');
+        atmega2560_uart_putchar('\r');
     }
     loop_until_bit_is_set(UCSR0A, UDRE0);
     UDR0 = c;
 }
-char ATMEGA2560_UART_GETCHAR() {
+char atmega2560_uart_getchar() {
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
 }
-bool ATMEGA2560_UART_RXBUFFER_READY(void) {
+bool atmega2560_uart_rxbuffer_ready(void) {
     if(bit_is_set(UCSR0B,RXC0)) {
         return true;
     } else {

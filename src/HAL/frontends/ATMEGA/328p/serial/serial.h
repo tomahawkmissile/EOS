@@ -1,8 +1,8 @@
-#ifndef ATMEGA2560_SERIAL_H
-#define ATMEGA2560_SERIAL_H
+#ifndef ATMEGA328P_SERIAL_H
+#define ATMEGA328P_SERIAL_H
 
 #ifndef F_CPU
-#define F_CPU 16000000
+#define F_CPU 8000000
 #endif
 #ifndef BAUD
 #define BAUD 9600
@@ -13,9 +13,9 @@
 #include <util/setbaud.h>
 #include <avr/io.h>
 
-void ATMEGA2560_UART_INIT(void);
-void ATMEGA2560_UART_PUTCHAR(char c);
-char ATMEGA2560_UART_GETCHAR();
-bool ATMEGA2560_UART_RXBUFFER_READY(void);
+void atmega328p_uart_init(void);
+void atmega328p_uart_putchar(char c);
+char atmega328p_uart_getchar();
+bool atmega328p_uart_rxbuffer_ready(void);
 
 #endif

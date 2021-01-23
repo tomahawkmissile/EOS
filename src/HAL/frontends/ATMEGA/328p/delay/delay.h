@@ -1,5 +1,5 @@
-#ifndef HAL_ARDUINOMEGA_SERIAL_H
-#define HAL_ARDUINOMEGA_SERIAL_H
+#ifndef ATMEGA328P_DELAY_H
+#define ATMEGA328P_DELAY_H
 
 #include "../../../../../core/system.h"
 
@@ -7,6 +7,6 @@
 #define __DELAY_BACKWARD_COMPATIBLE__
 #include <util/delay.h>
 
-void ATMEGA2560_DELAY_MS(int ms);
+void atmega328p_delay_ms(int ms);
 
 #endif

@@ -13,9 +13,9 @@
 #include <util/setbaud.h>
 #include <avr/io.h>
 
-void ATMEGA2560_UART_INIT(void);
-void ATMEGA2560_UART_PUTCHAR(char c);
-char ATMEGA2560_UART_GETCHAR();
-bool ATMEGA2560_UART_RXBUFFER_READY(void);
+void atmega2560_uart_init(void);
+void atmega2560_uart_putchar(char c);
+char atmega2560_uart_getchar();
+bool atmega2560_uart_rxbuffer_ready(void);
 
 #endif
