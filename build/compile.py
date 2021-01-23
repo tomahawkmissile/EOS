@@ -74,11 +74,13 @@ def main():
     print('Linking with command: '+link)
     os.system(link)
 
+    # Change back to build/
+    os.chdir('../build/')
+
     post_script = 'targets/'+args.target+'/postprocessing.sh'
-    if os.path.exists(post_script) # If a postprocessing script is given
+    if os.path.isfile(post_script): # If a postprocessing script is given
         print('Executing postprocessing script...')
-        os.chdir('output/')
-        subprocess.call(['bash', post_script])
+        subprocess.call(['bash', '../'+post_script], cwd='output/')
 
     print('Finished')
 
