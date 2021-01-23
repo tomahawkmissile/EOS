@@ -1,5 +1,3 @@
-core/main.c
-HAL/serial/serial.c
 HAL/frontends/ATMEGA/328p/delay/delay.c
 HAL/frontends/ATMEGA/328p/serial/serial.c
 

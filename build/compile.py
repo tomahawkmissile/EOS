@@ -13,6 +13,10 @@ LINKER_FLAGS = '-mmcu=atmega2560'
 def get_compile_list(target):
     list_compile_c_files = []
 
+    if target == 'default':
+        print('Default is not a target!')
+        exit(-1)
+
     for file in os.listdir("targets/"):
         if os.path.isdir("targets/"+file):
             #filename = file.split(".")[0]
@@ -27,7 +31,12 @@ def get_compile_list(target):
                     for line in f_list:
                         if not line.startswith('#') and not line.isspace():
                             list_compile_c_files.append(line.rstrip('\n'))
-                    return list_compile_c_files
+                with open('targets/default/files.txt') as default_files:
+                    for line in default_files:
+                        if not line.startswith('#') and not line.isspace():
+                            if line not in list_compile_c_files: # Catch duplicates
+                                list_compile_c_files.append(line.rstrip('\n'))
+                return list_compile_c_files
 
 def convert_c_filename_to_o(c_file_name):
     file_name_raw = c_file_name.split(".")[0]
