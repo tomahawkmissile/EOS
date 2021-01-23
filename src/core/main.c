@@ -2,11 +2,15 @@
 
 #include "../HAL/serial/serial.h"
 
+#include "cli.h"
+
 void loop() {
-    HAL_serial_putstring("Hello, World!\n");
+    cli_run();
 }
 void setup() {
     HAL_serial_init();
+
+    cli_init();
 }
 
 void main(void) {

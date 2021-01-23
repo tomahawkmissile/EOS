@@ -1,4 +1,14 @@
 # Default files for system
 
 core/main.c
+core/cli.c
+
+core/utils/string/strings.c
+
+core/tasks/queue.c
+
+core/debug/logger.c
+core/debug/debug.c
+
 HAL/serial/serial.c
+HAL/time/time.c

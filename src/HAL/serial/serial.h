@@ -6,6 +6,8 @@
 
 #include "../../core/system.h"
 
+#include "../../core/utils/string/strings.h"
+
 //#ifdef FRONTEND
 
 #if FRONTEND == 1 //If atmega2560
@@ -23,6 +25,11 @@
 #endif
 
 void HAL_serial_putstring(const char* str);
+void serial_println(const char* line);
+void serial_print(const char* line);
+void serial_linebreak(void);
+bool serial_available(void);
+char serial_read(void);
 
 //#endif
 

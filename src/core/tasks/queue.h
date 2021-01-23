@@ -26,4 +26,10 @@ struct TaskTimer {
 
 const TaskArguments NULL_ARGS = (TaskArguments) {.length=0,.elements=NULL}; //Null struct for referencing
 
+
+void queueFunction(bool (*func)(TaskArguments args), TaskArguments args, long delay, unsigned long interval, unsigned long timeout);
+void shrinkTaskList(int i);
+void runQueue(void);
+
+
 #endif

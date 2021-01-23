@@ -1,62 +1,62 @@
 #include "cli.h"
 
-boolean argsEqual(const char* input,const char* test) {
+bool argsEqual(const char* input,const char* test) {
   return strcmp(input,test)==0;
 }
 
-void printConsole(String message) {
-  Serial.println(CONSOLE_HEADER+message);
+void printConsole(const char* message) {
+  HAL_serial_putstring(concat(CONSOLE_HEADER,message));
 }
 
-void trimCmdLineArgs(String* input) {
+void trimCmdLineArgs(const char** input) {
   unsigned int firstValidChar=-1, lastValidChar=-1;
-  for(unsigned int i=0;i<input->length();i++) { //Get start index
-    if(input->charAt(i)!=' ') { //If not a space
+  for(unsigned int i=0;i<strlen(*input);i++) { //Get start index
+    if((*input)[i]!=' ') { //If not a space
       if(firstValidChar==-1) {
         firstValidChar=i; //If we hit first non space character, set it to start index
         break;
       }
     }
   }
-  for(unsigned int i=input->length()-1;i>=0;i--) { //Get end index
-    if(input->charAt(i)!=' ') {
+  for(unsigned int i=strlen(*input)-1;i>=0;i--) { //Get end index
+    if((*input)[i]!=' ') {
       if(lastValidChar==-1) {
         lastValidChar=i;
         break;
       }
     }
   }
-  String output = input->substring(firstValidChar,lastValidChar+1);
+  const char* output = substring(input,firstValidChar,lastValidChar+1);
   *input = output;
 }
-void smartSpaceSplit(String line, String* output, unsigned int* outputLength) {
-  boolean inQuotes=false;
+void smartSpaceSplit(const char* line, char** output, unsigned int* outputLength) {
+  bool inQuotes=false;
   int last=0;
-  for(unsigned int i=0;i<line.length();i++) {
-    char c = line.charAt(i);
+  for(unsigned int i=0;i<strlen(line);i++) {
+    char c = line[i];
     switch(c) {
       case '"':
         inQuotes=!inQuotes;
         break;
       case ' ':
         if(!inQuotes && i>0) {
-          String* newOutput;
+          char* newOutput;
           *outputLength++;
-          if(*outputLength>0) newOutput=(String*)realloc(output,sizeof(String)*(*outputLength));
-          else newOutput=(String*)malloc(sizeof(String)*(*outputLength));
-          output=newOutput;
-          output[*outputLength-1]=line.substring(last,i);
+          if(*outputLength>0) newOutput=(char*)realloc(*output,sizeof(char*)*(*outputLength+1));
+          else newOutput=(char*)malloc(sizeof(char)*(*outputLength+1));
+          *output=newOutput;
+          (*output)[*outputLength-1]=substring(line,last,i);
           last=i+1;
           break;
         }
       default: 
-        if(i==line.length()-2) {
-          String* newOutput;
+        if(i==strlen(line)-2) {
+          char* newOutput;
           *outputLength++;
-          if(*outputLength>0) newOutput=(String*)realloc(output,sizeof(String)*(*outputLength));
-          else newOutput=(String*)malloc(sizeof(String)*(*outputLength));
-          output=newOutput;
-          output[*outputLength-1]=line.substring(last,i+2);
+          if(*outputLength>0) newOutput=(char*)realloc(*output,sizeof(char)*(*outputLength+1));
+          else newOutput=(char*)malloc(sizeof(char)*(*outputLength+1));
+          *output=newOutput;
+          (*output)[*outputLength-1]=substring(line,last,i+2);
           return;
         }
       break;
@@ -64,47 +64,43 @@ void smartSpaceSplit(String line, String* output, unsigned int* outputLength) {
   }
   return;
 }
-void parseCmdLineArgs(String* input) {
+void parseCmdLineArgs(const char** input) {
   trimCmdLineArgs(input);
   
   unsigned int outputLength=0;
-  String* output;
+  char** output;
   smartSpaceSplit(*input,output,&outputLength);
   for(int i=0;i<outputLength;i++) {
-    Serial.println(output[i]);
+    serial_println(output[i]);
   }
   
-  Serial.println();
-  if(argsEqual(input->c_str(),"help")) {
-    Serial.println("<--- Available commands --->");
-    Serial.println("help                                            - show this page");
-    Serial.println("gps status                                      - show GPS status");
-    Serial.println("gps get all                                     - show all GPS data");
-    Serial.println("gps get latitude                                - get GPS latitude");
-    Serial.println("gps get longitude                               - get GPS longitude");
-    Serial.println("gps get satellites                              - get GPS satellite count");
-  } else if(argsEqual(input->c_str(),"")) {
-    Serial.print("");
+  serial_linebreak();
+
+  if(argsEqual(*input,"help")) {
+    serial_println("<--- Available commands --->");
+    serial_println("help                                            - show this page");
+  } else if(argsEqual(*input,"")) {
+    serial_println("");
   } else {
-    Serial.println("Unknown command. Type \'help\' for a help page.");
+    serial_println("Unknown command. Type \'help\' for a help page.");
   }
-  Serial.print(CONSOLE_HEADER);
+  serial_println(CONSOLE_HEADER);
 }
 
 void cli_init(void) {
 
-    Serial.println(); //Spacer before prompt
-    Serial.print(CONSOLE_HEADER); //Initial console characters on boot
+    serial_linebreak(); //Spacer before prompt
+    serial_println(CONSOLE_HEADER); //Initial console characters on boot
 }
 
-static String current_input="";
+static char* current_input="";
 void cli_run(void) {
     //Console input
-  if(Serial.available()) {
-    char c = Serial.read();
+  if(serial_available()) {
+    char c = serial_read();
     if(c != '\n' && c != '\r') {
       current_input += c;
-      Serial.print(c); //Print back to console to see what you're typing
+      serial_print(c); //Print back to console to see what you're typing
     }
     if(c=='\n' || c=='\r') { //If incoming data is newline
       parseCmdLineArgs(&current_input); //Send input to be parsed

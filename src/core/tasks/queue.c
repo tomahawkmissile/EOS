@@ -39,34 +39,34 @@ void runQueue(void) {
     if(current.lastrun<(unsigned long)1) { //If never ran before
       if(current.start <= now - current.delay) { //If initial delay is up
         if(getDebug()) {
-          logMessage(DEBUG, "Task with id #"+String(current.id)+" running first time at "+String(now)+"ms");
+          //logMessage(DEBUG, "Task with id #"+String(current.id)+" running first time at "+String(now)+"ms");
         }
         if(current.func(current.args)) {
           shrinkTaskList(i); //If task returns true (it is finished), remove it from list
-          logMessage(INFO, "Task with id #"+String(current.id)+" finished successfully.");
+          //logMessage(INFO, "Task with id #"+String(current.id)+" finished successfully.");
           return;
         }
         if(getDebug()) {
-          logMessage(DEBUG, "Task with id #"+String(current.id)+" done first time. ("+String(current.delay)+"ms initial delay)");
+          //logMessage(DEBUG, "Task with id #"+String(current.id)+" done first time. ("+String(current.delay)+"ms initial delay)");
         }
         current.lastrun=millis();
       }
     } else if(current.lastrun <= now - current.interval) { //If it is time to run the function
       if(getDebug()) {
-        logMessage(DEBUG, "Task with id #"+String(current.id)+" running at "+String(now)+"ms");
+        //logMessage(DEBUG, "Task with id #"+String(current.id)+" running at "+String(now)+"ms");
       }
       if(current.func(current.args)) {
         shrinkTaskList(i); //If task returns true (it is finished), remove it from list
-        logMessage(INFO, "Task with id #"+String(current.id)+" finished successfully.");
+        //logMessage(DEBUG, "Task with id #"+String(current.id)+" finished successfully.");
         return; //Exit function to run new list
       }
       if(getDebug()) {
-        logMessage(DEBUG, "Task with id #"+String(current.id)+" done. ("+String(current.interval)+"ms nominal, "+String(millis()-current.lastrun)+"ms effective)");
+        //logMessage(DEBUG, "Task with id #"+String(current.id)+" done. ("+String(current.interval)+"ms nominal, "+String(millis()-current.lastrun)+"ms effective)");
       }
       current.lastrun=millis();
     } else if(now >= current.timeout + current.start && current.timeout>0) { //If timeout reached and exists, remove task
       if(getDebug()) {
-        logMessage(DEBUG,"Task with id #"+String(current.id)+" timed out. ("+String(current.timeout)+"ms nominal, "+String(millis()-current.start)+"ms effective)");
+        //logMessage(DEBUG,"Task with id #"+String(current.id)+" timed out. ("+String(current.timeout)+"ms nominal, "+String(millis()-current.start)+"ms effective)");
       }
       shrinkTaskList(i);
       return; //Exit function to run new list
