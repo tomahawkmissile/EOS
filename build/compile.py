@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
+import shutil
 
 COMPILER_NAME = 'avr-gcc'
 COMPILER_FLAGS = '-mmcu=atmega2560 -Os -DF_CPU=16000000UL -Wall -Wno-main -Wundef -pedantic -Werror -Wfatal-errors -Wl,--relax,--gc-sections -g -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -fno-split-wide-types -fno-tree-scev-cprop'
@@ -12,14 +13,16 @@ def get_compile_list(target):
     list_compile_c_files = []
 
     for file in os.listdir("targets/"):
-        if file.endswith(".txt"):
-            filename = file.split(".")[0]
+        if os.path.isdir("targets/"+file):
             if filename.lower() == target.lower(): #case insensitive
-                with open('targets/'+filename+'.txt') as f_list:
+                with open('targets/'+filename+'/files.txt') as f_list:
                     for line in f_list:
                         if not line.startswith('#') and not line.isspace():
                             list_compile_c_files.append(line.rstrip('\n'))
                     return list_compile_c_files
+    # If target does not exist
+    print('Target does not exist! Check to make sure your target is supported.')
+    exit(-1)
 
 def convert_c_filename_to_o(c_file_name):
     file_name_raw = c_file_name.split(".")[0]
@@ -43,10 +46,15 @@ def main():
         print("No files to be compiled! Check your target platform compilation list!")
         exit(-1)
 
-    if not os.path.exists('output/'):
-        os.mkdir('output/')
+    # Clean output folder
+    print('Cleaning output directory...')
+    if os.path.exists('output/'):
+        shutil.rmtree('output/')
+    os.mkdir('output/')
+    print('Done')
 
-    #Change directory to src/
+    print('Beginning compilation...')
+    # Change directory to src/
     os.chdir('../src/')
 
     executable_list_string = ''
@@ -62,6 +70,8 @@ def main():
     link = (LINKER_NAME+' '+LINKER_FLAGS+' -o '+binary_location+' '+executable_list_string)    
     print('Linking with command: '+link)
     os.system(link)
+
+    print('Finished')
 
 if __name__ == "__main__":
     main()

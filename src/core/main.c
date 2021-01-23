@@ -11,5 +11,5 @@ void setup() {
 
 void main(void) {
     setup();
-    loop();
+    while(1) loop();
 }
