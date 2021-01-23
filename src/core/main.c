@@ -3,7 +3,7 @@
 #include "../HAL/serial/serial.h"
 
 void loop() {
-    HAL_serial_putstring("Hello, World!");
+    HAL_serial_putstring("Hello, World!\n");
 }
 void setup() {
     HAL_serial_init();
